@@ -1,11 +1,11 @@
 let mongoose = require("mongoose")
 let userSchema = new mongoose.Schema({
-    fname: {type:String, required:true},
-    lname: {type:String, required:true},
-    email: {type:String, required:true,unique:true},
+    fname: {type:String, required:true,trim:true},
+    lname: {type:String, required:true,trim:true},
+    email: {type:String, required:true,unique:true,trim:true},
     profileImage: {type:String, required:true}, // s3 link
-    phone: {type:String, required:true, unique:true}, 
-    password: {type:String, required:true}, // encrypted password
+    phone: {type:String, required:true, unique:true,trim:true}, 
+    password: {type:String, required:true,trim:true}, // encrypted password
     address: {
       shipping: {
         street: {type:String, required:true},
