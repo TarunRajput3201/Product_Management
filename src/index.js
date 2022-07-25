@@ -6,7 +6,7 @@ app.use(multer().any())
 
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://TarunRajput3201:B07QeYy2JnV33rgz@cluster0.7eei6gq.mongodb.net/group48Database", {
+mongoose.connect("mongodb+srv://TarunRajput3201:B07QeYy2JnV33rgz@cluster0.7eei6gq.mongodb.net/group29Database", {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
