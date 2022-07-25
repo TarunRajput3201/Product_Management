@@ -9,26 +9,26 @@ const jwt=require("jsonwebtoken")
 let createUser = async function (req, res) {
     try {
         let bodyData = req.body
-        let { address } = bodyData
+        let { fname,lname,email,phone,password,address } = bodyData
         address = JSON.parse(address)
 
         let obj = {}
 
         if (bodyData == undefined || bodyData == null) { return res.status(400).send({ status: false, message: "please provide the bodyData in body" }) }
 
-        if (!validateString(bodyData.fname)) { return res.status(400).send({ status: false, message: "please provide the first name" }) }
-        if (!regxName(bodyData.fname)) { return res.status(400).send({ status: false, message: "please provide a valid first name" }) }
-        obj.fname = bodyData.fname
+        if (!validateString(fname)) { return res.status(400).send({ status: false, message: "please provide the first name" }) }
+        if (!regxName(fname)) { return res.status(400).send({ status: false, message: "please provide a valid first name" }) }
+        obj.fname = fname
 
-        if (!validateString(bodyData.lname)) { return res.status(400).send({ status: false, message: "please provide the last name" }) }
-        if (!regxName(bodyData.lname)) { return res.status(400).send({ status: false, message: "please provide a valid last name" }) }
-        obj.lname = bodyData.lname
+        if (!validateString(lname)) { return res.status(400).send({ status: false, message: "please provide the last name" }) }
+        if (!regxName(lname)) { return res.status(400).send({ status: false, message: "please provide a valid last name" }) }
+        obj.lname = lname
 
-        if (!validateString(bodyData.email)) { return res.status(400).send({ status: false, message: "please provide the email" }) }
-        if (!validateEmail(bodyData.email)) { return res.status(400).send({ status: false, message: "please provide a valid email" }) }
-        let isDuplicateEmail = await userModel.findOne({ email: bodyData.email })
+        if (!validateString(email)) { return res.status(400).send({ status: false, message: "please provide the email" }) }
+        if (!validateEmail(email)) { return res.status(400).send({ status: false, message: "please provide a valid email" }) }
+        let isDuplicateEmail = await userModel.findOne({ email: email })
         if (isDuplicateEmail) { return res.status(400).send({ status: false, message: "this email already exists" }) }
-        obj.email = bodyData.email
+        obj.email = email
 
         if (!validateString(bodyData.profileImage)) { return res.status(400).send({ status: false, message: "please provide the profileImage" }) }
         let profileImage = req.files;
@@ -42,16 +42,16 @@ let createUser = async function (req, res) {
         }
 
 
-        if (!validateString(bodyData.phone)) { return res.status(400).send({ status: false, message: "please provide the phone number" }) }
-        if (!regexNumber(bodyData.phone)) { return res.status(400).send({ status: false, message: "please provide a valid phone number" }) }
-        let isDuplicatePhone = await userModel.findOne({ phone: bodyData.phone })
+        if (!validateString(phone)) { return res.status(400).send({ status: false, message: "please provide the phone number" }) }
+        if (!regexNumber(phone)) { return res.status(400).send({ status: false, message: "please provide a valid phone number" }) }
+        let isDuplicatePhone = await userModel.findOne({ phone: phone })
         if (isDuplicatePhone) { return res.status(400).send({ status: false, message: "this phone number already exists" }) }
-        obj.phone = bodyData.phone
+        obj.phone = phone
 
-        if (!validateString(bodyData.password)) { return res.status(400).send({ status: false, message: "please provide the password" }) }
-        if (bodyData.password.length < 8 || bodyData.password.length > 15) { return res.status(400).send({ status: false, message: "password must be between 8-15" }) }
+        if (!validateString(password)) { return res.status(400).send({ status: false, message: "please provide the password" }) }
+        if (password.length < 8 || password.length > 15) { return res.status(400).send({ status: false, message: "password must be between 8-15" }) }
         const salt = await bcrypt.genSalt(13);
-        const encryptedPassword = await bcrypt.hash(bodyData.password, salt);
+        const encryptedPassword = await bcrypt.hash(password, salt);
         obj.password = encryptedPassword
 
 
