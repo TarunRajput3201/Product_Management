@@ -80,6 +80,9 @@ const regexNumber = function(val){
     let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
     return regx.test(val);
 }
+const isValidPincode =function(val){
+    return val==6
+}
 
 
 module.exports = {
@@ -93,7 +96,8 @@ module.exports = {
   validateObjectId,
   passwordLength,
   regexNumber,
-  regxName
+  regxName,
+  isValidPincode
 
   
 };
