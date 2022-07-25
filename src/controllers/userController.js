@@ -8,13 +8,15 @@ const jwt=require("jsonwebtoken")
 
 let createUser = async function (req, res) {
     try {
-        let bodyData = req.body
+        let bodyData = {...req.body}
+        
         let { fname,lname,email,phone,password,address } = bodyData
         address = JSON.parse(address)
+        
 
         let obj = {}
-
-        if (bodyData == undefined || bodyData == null) { return res.status(400).send({ status: false, message: "please provide the bodyData in body" }) }
+        if (validateRequest(bodyData)) { return res.status(400).send({ status: false, message: "please provide the bodyData in body" }) }
+        // if (bodyData == undefined || bodyData == null) { return res.status(400).send({ status: false, message: "please provide the bodyData in body" }) }
 
         if (!validateString(fname)) { return res.status(400).send({ status: false, message: "please provide the first name" }) }
         if (!regxName(fname)) { return res.status(400).send({ status: false, message: "please provide a valid first name" }) }
@@ -55,15 +57,14 @@ let createUser = async function (req, res) {
         obj.password = encryptedPassword
 
 
-        if (!validateRequest(address)) { return res.status(400).send({ status: false, message: "please provide the bodyData in body" }) }
-
-        if (!validateRequest(address)) {
+       
+        if (validateRequest(address)) {
             return res.status(400).send({ status: false, message: "Invalid address" });
         }
 
         const { shipping, billing } = address;
 
-        if (!validateRequest(shipping)) {
+        if (validateRequest(shipping)) {
             return res.status(400).send({ status: false, message: "Shipping address is required" });
         } else {
             let { street, city, pincode } = shipping;
@@ -72,7 +73,7 @@ let createUser = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Shipping address: street name is required " });
             }
 
-            if (isValidPincode(pincode)) {
+            if (!isValidPincode(pincode)) {
                 return res.status(400).send({ status: false, message: "Shipping address: pin code should be valid like: 335659 " });
             }
 
@@ -81,7 +82,7 @@ let createUser = async function (req, res) {
             }
         }
 
-        if (!validateRequest(billing)) {
+        if (validateRequest(billing)) {
             return res.status(400).send({ status: false, message: "Billing address is required" });
         }
         else {
@@ -91,7 +92,7 @@ let createUser = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Billing address: street name is required " });
             }
 
-            if (isValidPincode(pincode)) {
+            if (!isValidPincode(pincode)) {
                 return res.status(400).send({ status: false, message: "Billing address: pin code should be valid like: 335659 " });
             }
 

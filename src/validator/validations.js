@@ -62,9 +62,7 @@ const validatePassword = function (value) {
 };
 
 const validateRequest = function (value) {
-  if (Object.keys(value).length == 0) {
-    return false;
-  } else return true;
+  return Object.keys(value).length == 0
 };
 let validateObjectId = function (ObjectId) {
   return mongoose.isValidObjectId(ObjectId)
@@ -81,7 +79,7 @@ const regexNumber = function(val){
     return regx.test(val);
 }
 const isValidPincode =function(val){
-    return val==6
+    return val.toString().length==6
 }
 
 
