@@ -30,25 +30,25 @@ let uploadFile = async (file) => {
 };
 
 
-let profileImageLink= async function(req,res,next){
-try{let  profileimage= req.files;
+// let profileImageLink= async function(req,res,next){
+// try{let  profileimage= req.files;
   
-if (profileimage && profileimage.length > 0) {
-  let uploadedFileURL = await uploadFile(profileimage[0]);
-  req.xyz=uploadedFileURL
-//   res.status(201).send({status:true, data:uploadedFileURL})
-} else {
- return  res.status(400).send({status:false, message: "No file found" });
-}
-next()
-}
-catch(err){
-    res.status(500).send({status:false, message:err })
-}
+// if (profileimage && profileimage.length > 0) {
+//   let uploadedFileURL = await uploadFile(profileimage[0]);
+// //   req.xyz=uploadedFileURL
+// //   res.status(201).send({status:true, data:uploadedFileURL})
+// } else {
+//  return  res.status(400).send({status:false, message: "No file found" });
+// }
+// next()
+// }
+// catch(err){
+//     res.status(500).send({status:false, message:err })
+// }
 
-}
-
-
+// }
 
 
-module.exports = {profileImageLink}
+
+
+module.exports = {uploadFile}
