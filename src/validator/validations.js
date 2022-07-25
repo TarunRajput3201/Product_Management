@@ -1,16 +1,8 @@
 const mongoose = require("mongoose");
-
-
-const validateEnum = function validateEnum(value) {
-
-
-  var titleEnum = ["Mr", "Mrs", "Miss"];
-  if (titleEnum.includes(value)) {
-    return true;
-  }
-
-  return false;
-};
+const regxName = function (val) {
+    let regx = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
+    return regx.test(val);
+}
 
 const validateNumber = function validateNumber(value) {
   if (typeof value == "number") {
@@ -84,13 +76,12 @@ const passwordLength = function (password) {
 };
 
 
-const isValidISBN = function (ISBN) {
-
-  if (/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN) || /^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN) || /^(?=(?:\D*\d){17}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN)) {
-    return true
-  }
-  else { return false }
+const regexNumber = function(val){
+    let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
+    return regx.test(val);
 }
+
+
 module.exports = {
   validateString,
   convertToArray,
@@ -101,7 +92,8 @@ module.exports = {
   validateNumber,
   validateObjectId,
   passwordLength,
+  regexNumber,
+  regxName
 
-  validateEnum,
-  isValidISBN
+  
 };
