@@ -79,7 +79,7 @@ const regexNumber = function(val){
     return regx.test(val);
 }
 const isValidPincode =function(val){
-    return val.toString().length==6
+    return   typeof val=="number"  && val.toString().length==6 
 }
 
 
