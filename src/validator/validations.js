@@ -12,7 +12,7 @@ const validateNumber = function validateNumber(value) {
 };
 
 const validateString = function (name) {
-  if (typeof name == undefined || typeof name == null) return false;
+  if (typeof name == "undefined" || typeof name == null) return false;
   if (typeof name == "string" && name.trim().length == 0) return false;
 
   return true;
@@ -50,23 +50,19 @@ const validateEmail = function (value) {
   return true;
 };
 
-const validatePassword = function (value) {
-  let re = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{8,}$/;
-  let validPassword = re.test(value);
-
-  if (!validPassword) {
-    return false;
-  }
-
-  return true;
-};
+const validatePassword = function(value){
+  let regex =    /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
+  return regex.test(value)
+ }
 
 const validateRequest = function (value) {
   return Object.keys(value).length == 0
 };
+
 let validateObjectId = function (ObjectId) {
   return mongoose.isValidObjectId(ObjectId)
 }
+
 const passwordLength = function (password) {
   if (password.length >= 8 && password.length <= 15) {
     return true;
@@ -82,6 +78,11 @@ const isValidPincode =function(val){
     return   typeof val=="number"  && val.toString().length==6 
 }
 
+const imageExtValidator = function(val){
+  let regex = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/
+  return regex.test(val)
+}
+
 
 module.exports = {
   validateString,
@@ -95,7 +96,8 @@ module.exports = {
   passwordLength,
   regexNumber,
   regxName,
-  isValidPincode
+  isValidPincode,
+  imageExtValidator
 
   
 };
