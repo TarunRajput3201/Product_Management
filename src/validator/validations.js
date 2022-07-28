@@ -70,7 +70,7 @@ const passwordLength = function (password) {
 };
 
 
-const regexNumber = function(val){
+const regexPhoneNumber = function(val){
     let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
     return regx.test(val);
 }
@@ -83,6 +83,12 @@ const imageExtValidator = function(val){
   return regex.test(val)
 }
 
+const validNumber = function(value) {
+ let regex= /^[0-9]*$/
+ return regex.test(value)
+};
+
+
 
 module.exports = {
   validateString,
@@ -94,10 +100,11 @@ module.exports = {
   validateNumber,
   validateObjectId,
   passwordLength,
-  regexNumber,
+  regexPhoneNumber,
   regxName,
   isValidPincode,
-  imageExtValidator
+  imageExtValidator,
+  validNumber
 
   
 };
