@@ -87,7 +87,13 @@ const validNumber = function(value) {
  let regex= /^[0-9]*$/
  return regex.test(value)
 };
+function onlyWholeNumbers(str) {
+  return /^[0-9]+$/.test(str);
+}
 
+function decNumbers(str) {
+  return /^[0-9.]+$/.test(str);
+}
 
 
 module.exports = {
@@ -104,7 +110,9 @@ module.exports = {
   regxName,
   isValidPincode,
   imageExtValidator,
-  validNumber
+  validNumber,
+  onlyWholeNumbers,
+  decNumbers
 
   
 };

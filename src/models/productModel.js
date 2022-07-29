@@ -10,8 +10,8 @@ let productSchema=new mongoose.Schema(
      currencyFormat:{type:String, require:true},
      isFreeShipping:{type:Boolean, default: false},
      productImage:{type:String,require:true},  // s3 link
-     style: {type:String},
-     availableSizes: {type:[String]},
+     style: {type:String,trim:true},
+     availableSizes:[{type:String, trim:true}],
      installments: {type:Number},
      deletedAt: {type:Date,default:null}, 
      isDeleted: {type:Boolean, default: false}
@@ -19,4 +19,4 @@ let productSchema=new mongoose.Schema(
     },
   { timestamps: true })
   
-module.exports = mongoose.model('product', productSchema)
+module.exports = mongoose.model('Product', productSchema)
