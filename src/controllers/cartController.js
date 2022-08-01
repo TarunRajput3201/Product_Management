@@ -66,7 +66,7 @@ let createCart=async function(req,res){
     }
     else{
         
-        if( cartId && cart._id!=cartId){return res.status(404).send({status:false,message:"cartId provided doesnot belongs to this user"})}
+        // if( cartId && cart._id!=cartId){return res.status(404).send({status:false,message:"cartId provided doesnot belongs to this user"})}
         if(cart.items.length>0){
         let noProductId=true
             for(let i=0;i<cart.items.length;i++){
