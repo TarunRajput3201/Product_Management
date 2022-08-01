@@ -77,14 +77,21 @@ let createCart=async function(req,res){
             
         }
        if(noProductId){
-        items[0].quantity=1
-        cart.items.push(items[0])
-        
+        let obj={}
+        obj.productId=product._id
+        obj.quantity=1
+          
+        cart.items.push(obj)
        }
        
     }
-    else{ items[0].quantity=1
-        cart.items.push(items[0])}
+    else{ 
+        let obj={}
+        obj.productId=product._id
+        obj.quantity=1
+          
+        cart.items.push(obj)
+    }
        
     
     
@@ -98,6 +105,7 @@ let createCart=async function(req,res){
         
         }
      catch(err){
+        console.log(err)
             return res.status(500).send({sttus:false,message:err.message})
         } 
         

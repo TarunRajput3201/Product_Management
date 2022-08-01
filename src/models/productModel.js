@@ -9,7 +9,7 @@ let productSchema=new mongoose.Schema(
      currencyId:{type:String, require:true,trim:true},
      currencyFormat:{type:String, require:true},
      isFreeShipping:{type:Boolean, default: false},
-     productImage:{type:String,require:true},  // s3 link
+     productImage:{type:String,require:true},
      style: {type:String,trim:true},
      availableSizes:[{type:String, trim:true}],
      installments: {type:Number},
