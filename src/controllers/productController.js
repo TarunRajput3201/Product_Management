@@ -22,7 +22,7 @@ if(!description){return res.status(400).send({status:false,message:"please provi
 
 
 if(!price){return res.status(400).send({status:false,message:"please provide the price"})}
-if(!decNumbers(price)|| !validNumber(price.toString())){return res.status(400).send({status:false,message:"price must be a number"})}
+if(!decNumbers(price)|| !decNumbers(price.toString())){return res.status(400).send({status:false,message:"price must be a number"})}
 
 if("currencyId" in bodyData){
 if(!validateString(currencyId)){ bodyData.currencyId="INR"}
@@ -127,11 +127,16 @@ if(products.length == 0){return res.status(400).send({status:false,massege:"No P
 
 let getProductById=async function(req,res){
 try{let productId=req.params.productId 
-if(!validateObjectId(productId)){return res.status(400).send({ status: false, message:"please enter a valid objectId"})}
- let data=await productModel.findOne({_id:productId,isDeleted:false})
- if(!data){return res.status(404).send({ status: false, message:"No product with this productId or deleted"})}
- res.status(200).send({ status: true, data:data })}
- catch (err) {
+
+    if(!validateObjectId(productId)){return res.status(400).send({ status: false, message:"please enter a valid objectId"})}
+ 
+    let data=await productModel.findOne({_id:productId,isDeleted:false})
+ 
+    if(!data){return res.status(404).send({ status: false, message:"No product with this productId or deleted"})}
+ 
+    res.status(200).send({ status: true, data:data })}
+ 
+    catch (err) {
     return res.status(500).send({ status: false, message: err.message })
 }
 }
@@ -221,13 +226,19 @@ const updateProduct = async function (req, res) {
 
 let deleteProductById=async function(req,res){
     try{let productId=req.params.productId 
+        
         if(!validateObjectId(productId)){return res.status(400).send({ status: false, message:"please enter a valid objectId"})}
-         let data=await productModel.findOne({_id:productId,isDeleted:false})
-         if(!data){return res.status(404).send({ status: false, message:"No product with this productId or deleted"})}
          
-         let deletedData=await productModel.findOneAndUpdate({_id:productId},{$set:{isDeleted:true,deletedAt:new Date}})
-         res.status(200).send({ status: true, message:"product deleted succesfully"})}
-         catch (err) {
+        let data=await productModel.findOne({_id:productId,isDeleted:false})
+         
+        if(!data){return res.status(404).send({ status: false, message:"No product with this productId or deleted"})}
+         
+        
+        let deletedData=await productModel.findOneAndUpdate({_id:productId},{$set:{isDeleted:true,deletedAt:new Date}})
+         
+        res.status(200).send({ status: true, message:"product deleted succesfully"})}
+        
+        catch (err) {
             return res.status(500).send({ status: false, message: err.message })
         }
         
