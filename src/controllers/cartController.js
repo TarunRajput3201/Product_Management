@@ -21,14 +21,14 @@ let createCart=async function(req,res){
     let bodyData=req.body
     if(validateRequest(bodyData)){return res.status(400).send({status:false,message:"please provide data in body"})}
     
-    let {userId,items,totalPrice,totalItems}=bodyData
+    let {productId,cartId}=bodyData
     
    
     // console.log(userId)
 
-    let[{productId,quantity}]=items
+    
     // console.log(productId)
-    if(!productId){return res.status(400).send({status:false,message:"please provide productId in items"})}
+    if(!productId){return res.status(400).send({status:false,message:"please provide productId"})}
         if(!validateObjectId(productId)){return res.status(400).send({status:false,message:"please provide a valid productId in items"})}
         
        
@@ -65,6 +65,8 @@ let createCart=async function(req,res){
         res.status(201).send({status:true,message:"cart created successfully", data:response})
     }
     else{
+        
+        if( cartId && cart._id!=cartId){return res.status(404).send({status:false,message:"cartId provided doesnot belongs to this user"})}
         if(cart.items.length>0){
         let noProductId=true
             for(let i=0;i<cart.items.length;i++){
