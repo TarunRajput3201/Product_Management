@@ -16,10 +16,10 @@ router.get("/products/:productId",getProductById)
 router.put("/products/:productId",updateProduct)
 router.delete("/products/:productId",deleteProductById)
 
-router.post("/users/:userId/cart",createCart)
-router.put("/users/:userId/cart",updateCart)
-router.get("/users/:userId/cart",getCart)
-router.delete("/users/:userId/cart",deleteCart)
+router.post("/users/:userId/cart",authentication,createCart)
+router.put("/users/:userId/cart",authentication,updateCart)
+router.get("/users/:userId/cart",authentication,getCart)
+router.delete("/users/:userId/cart",authentication,deleteCart)
 
 router.all("/**",function(req,res){
     return res.status(404).send({status:false,message:"No such api found"})

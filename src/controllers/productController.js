@@ -81,6 +81,16 @@ if(!validateString(availableSizes)){return res.status(400).send({ status: false,
 
 const getProduct = async function(req,res){
     try{let {size,name,priceGreaterThan,priceLessThan,priceSort} = req.query
+     
+    let getFilter = Object.keys(req.query)
+    if (getFilter.length) {
+      for (let value of getFilter) {
+        if (['size', 'name', 'priceGreaterThan','priceLessThan','priceSort'].indexOf(value) == -1)
+          return res.status(400).send({ status: false, message: `You can't filter Using '${value}' ` })
+      }
+    }
+
+
 
     let obj = {
               isDeleted:false,    
@@ -91,9 +101,22 @@ const getProduct = async function(req,res){
     let obj1 = {}
 
 if(size){
-    if(!["S", "XS","M","X", "L","XXL", "XL"].includes(size)){return res.status(400).send({status:false,massege:"please provide size from [S, XS, M, X, L, XXL, XL] only"})}
-    obj.availableSizes = size
+   let availableSize=["S","XS","M","X","L","XXL","XL"]
+   
+   let items=[]
+    let sizes=size.split(",")
+    for(let i=0;i<sizes.length;i++){
+        if(!availableSize.includes(sizes[i].trim())){return res.status(400).send({status:false,message:`please provide size from ${availableSize} `})}
+        if(availableSize.includes(sizes[i].trim())){
+            
+            items.push(sizes[i].trim())
+        }
+     }
+    //  console.log(sizes)
+      obj.availableSizes={$in:items}
+   
 }
+
 
 if(name){
     obj.title = name

@@ -10,73 +10,14 @@ const { validateString,
     decNumbers,
 validateNumber} = require("../validator/validations")
 
-// let createCart=async function(req,res){
-//    try{let id=req.params.userId
-//    if(!validateObjectId(id)){return res.status(400).send({status:false,message:"please provide valid userId"})}
-   
-//    let bodyData=req.body
-//    if(validateRequest(bodyData)){return res.status(400).send({status:false,message:"please provide data in body"})}
-   
-//    let {userId,items,totalPrice,totalItems}=bodyData
-
-    // userId=id
-
-    // if(items.length==0){return res.status(400).send({status:false,message:"please add atleast one product"})}
-    
-    // let [{productId,quantity}]=items
-
-    
-    //     if(!productId){return res.status(400).send({status:false,message:"please provide productId in items"})}
-    //     if(!validateObjectId(productId)){return res.status(400).send({status:false,message:"please provide a valid productId in items"})}
-        
-    //     if(!quantity){return res.status(400).send({status:false,message:"please provide quantity in items"})}
-    //     if(quantity===0){return res.status(400).send({status:false,message:"please provide atleast 1 quantity for the product in items"})}
-
-    
-    // let cartPresent=await cartModel.findOne({userId:userId}).lean()
-    // if(cartPresent){
-    //   if(cartPresent.items.length>0){
-    //     for(let i=0;i<cartPresent.items.length;i++){
-    //     if(cartPresent.items[i][productId]==productId){
-    //        quantity++
-    //     }
-    //     else{
-    //        items[0].push(cartPresent.items[i])
-    //     }
-    // }
-    //   }
-    // }
-   
-
-    // let totalprice=0
-    // for(let i=0;i<items.length;i++){
-    //     let product=await productModel.findOne({_id:items[i][productId],isDeleted:false})
-    //     if(!product){return res.status(404).send({status:false,message:"product with this productId doesnot exists or deleted"})}
-
-    //     totalprice=totalprice+((product.price)*(items[i][quantity]))
-    // }
-    // totalPrice=totalprice
-
-    // totalItems=items.length
-
-     
-
-//     let isUserExists=await userModel.findById(userId)
-//     if(!isUserExists){return res.status(404).send({status:false,message:"user with this userId doesnot exists"})}
-
-//     let cart=await cartModel.create(bodyData)
-//     res.status(201).send({status:true,message:"cart created successfully",data:cart})
-// }
-// catch(err){
-//     return res.status(500).send({sttus:false,message:err.message})
-// } 
-
-// }
 
 let createCart=async function(req,res){
     try{let id=req.params.userId
     if(!validateObjectId(id)){return res.status(400).send({status:false,message:"please provide valid userId"})}
     
+    let tokenUserId=req.user.userId
+    if(tokenUserId!==id){return res.status(403).send({status:false,message:"authorization failed"})}
+
     let bodyData=req.body
     if(validateRequest(bodyData)){return res.status(400).send({status:false,message:"please provide data in body"})}
     
@@ -90,10 +31,7 @@ let createCart=async function(req,res){
     if(!productId){return res.status(400).send({status:false,message:"please provide productId in items"})}
         if(!validateObjectId(productId)){return res.status(400).send({status:false,message:"please provide a valid productId in items"})}
         
-        if(!quantity){return res.status(400).send({status:false,message:"please provide quantity in items"})}
-        if(!validateNumber(quantity)){return res.status(400).send({status:false,message:"quantity should be a number"})}
-        if(quantity==0){return res.status(400).send({status:false,message:"please provide atleast 1 quantity for the product in items"})}
-      
+       
 
         let user=await userModel.findOne({_id:id})
         if(!user){return res.status(404).send({status:false,message:"user with this userId not found"})}
@@ -109,9 +47,9 @@ let createCart=async function(req,res){
             "userId":id,
              "items":[{
                 "productId":productId,
-                "quantity":quantity
+                "quantity":1
              }],
-             "totalPrice":product.price*quantity,
+         "totalPrice":product.price,
              "totalItems":1
         }
         let cartCreated=await cartModel.create(obj)
@@ -128,19 +66,27 @@ let createCart=async function(req,res){
     }
     else{
         if(cart.items.length>0){
-        
+        let noProductId=true
             for(let i=0;i<cart.items.length;i++){
             if(cart.items[i].productId==productId){
-                cart.items[i].quantity=cart.items[i].quantity+quantity
-               break
+                cart.items[i].quantity++
+               noProductId=false
             }
             
-               
         }
-       
-        // cart.items.push(items[0])
+       if(noProductId){
+        items[0].quantity=1
+        cart.items.push(items[0])
+        
        }
-       cart.totalPrice=cart.totalPrice+(product.price*quantity)
+       
+    }
+    else{ items[0].quantity=1
+        cart.items.push(items[0])}
+       
+    
+    
+      cart.totalPrice=cart.totalPrice+product.price
        cart.totalItems=cart.items.length
        cart.save()
        
@@ -149,11 +95,7 @@ let createCart=async function(req,res){
     }
         
         }
-
-
-
-
-    catch(err){
+     catch(err){
             return res.status(500).send({sttus:false,message:err.message})
         } 
         
@@ -167,6 +109,10 @@ let updateCart=async function(req,res){
     try{
         let userId=req.params.userId
         if(!validateObjectId(userId)){return res.status(400).send({status:false,message:"please provide valid userId"})}
+        
+        let tokenUserId=req.user.userId
+        if(tokenUserId!==userId){return res.status(403).send({status:false,message:"authorization failed"})}
+
         let bodyData=req.body
         let {productId,cartId,removeProduct}=bodyData
 
@@ -219,7 +165,10 @@ let updateCart=async function(req,res){
 let getCart =async function(req,res){
     try{let userId=req.params.userId
     if(!validateObjectId(userId)){return res.status(400).send({status:false,message:"please provide valid userId"})}
-        
+    
+    let tokenUserId=req.user.userId
+    if(tokenUserId!==userId){return res.status(403).send({status:false,message:"authorization failed"})}
+
     let user=await userModel.findById(userId)
     if(!user){return res.status(404).send({status:false,message:"user with this userId not found"})}
 
@@ -241,7 +190,8 @@ let deleteCart =async function(req,res){
     try{let userId=req.params.userId
     if(!validateObjectId(userId)){return res.status(400).send({status:false,message:"please provide valid userId"})}
         
-    
+    let tokenUserId=req.user.userId
+    if(tokenUserId!==userId){return res.status(403).send({status:false,message:"authorization failed"})}
     
     let user=await userModel.findById(userId)
     if(!user){return res.status(404).send({status:false,message:"user with this userId not found"})}
