@@ -9,6 +9,8 @@ const { validateString,
      decNumbers} = require("../validator/validations")
 
 
+//=====================================CREATING PRODUCT===========================================================//
+
 let createProduct=async function(req,res){
 try{let bodyData=req.body
     
@@ -77,6 +79,7 @@ if(!validateString(availableSizes)){return res.status(400).send({ status: false,
 }
 
 
+//=====================================GETTING PRODUCT BY QUERY================================================//
 
 
 const getProduct = async function(req,res){
@@ -148,6 +151,9 @@ if(products.length == 0){return res.status(400).send({status:false,massege:"No P
 }
 
 
+//=====================================GETTING PRODUCT BY PRODUCTID================================================//
+
+
 let getProductById=async function(req,res){
 try{let productId=req.params.productId 
 
@@ -163,6 +169,10 @@ try{let productId=req.params.productId
     return res.status(500).send({ status: false, message: err.message })
 }
 }
+
+
+//=====================================UPDATING PRODUCT=======================================================//
+
 
 const updateProduct = async function (req, res) {
     try {
@@ -246,6 +256,8 @@ const updateProduct = async function (req, res) {
 
 }
 
+//=====================================DELETING PRODUCT======================================================//
+
 
 let deleteProductById=async function(req,res){
     try{let productId=req.params.productId 
@@ -267,5 +279,6 @@ let deleteProductById=async function(req,res){
         
 
 }
+
 
 module.exports={createProduct,getProduct,getProductById,deleteProductById,updateProduct}

@@ -3,7 +3,19 @@ const { uploadFile } = require("../controllers/awsController")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt=require("jsonwebtoken")
-const { validateString, validateNumber, validateRequest, validateEmail, regexPhoneNumber, regxName, isValidPincode, validatePassword,imageExtValidator} = require("../validator/validations")
+const { validateString,
+     validateNumber,
+      validateRequest,
+       validateEmail,
+        regexPhoneNumber,
+         regxName, 
+          isValidPincode,
+           validatePassword,
+            imageExtValidator} = require("../validator/validations")
+
+
+//=====================================CREATING USER PROFILE===========================================================//
+
 
 let createUser = async function (req, res) {
     try {
@@ -82,7 +94,7 @@ let createUser = async function (req, res) {
     }
 }
 
-
+//=====================================USER LOGIN===========================================================//
 
 let userLogin = async function (req, res) {
     try {
@@ -122,6 +134,9 @@ let userLogin = async function (req, res) {
     }
 }
 
+//=================================GETTING USER PROFILE BY USERID================================================//
+
+
 let getUser = async function (req, res) {
     try {
         let userId = req.params.userId
@@ -139,6 +154,10 @@ let getUser = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
+//=====================================UPDATING USER PROFILE===========================================================//
+
+
 const Updateprofile = async function (req, res) {
     try {
         let userId = req.params.userId

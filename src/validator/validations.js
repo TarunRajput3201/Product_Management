@@ -4,12 +4,16 @@ const regxName = function (val) {
     return regx.test(val);
 }
 
+//=====================================VALIDATING TYPE NUMBER=============================================//
+
 const validateNumber = function validateNumber(value) {
   if (typeof value == "number") {
     return true;
   }
   return false;
 };
+
+//=======================================VALIDATING EMPTY STRING============================================//
 
 const validateString = function (name) {
   if (typeof name == "undefined" || typeof name == null) return false;
@@ -18,26 +22,8 @@ const validateString = function (name) {
   return true;
 };
 
-const checkValue = function (value) {
-  let arrValue = [];
-  value.map((x) => {
-    x = x.trim();
-    if (x.length) arrValue.push(x);
-  });
-  return arrValue.length ? arrValue : false;
-};
 
-const convertToArray = function (value) {
-  if (typeof value == "string") {
-    value = value.trim();
-    if (value) {
-      return [value];
-    }
-  } else if (value?.length > 0) {
-    return checkValue(value);
-  }
-  return false;
-};
+//====================================VALIDATING EMAIL==================================================//
 
 const validateEmail = function (value) {
   let re = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
@@ -50,18 +36,28 @@ const validateEmail = function (value) {
   return true;
 };
 
+//====================================VALIDATING PASSWORD==================================================//
+
 const validatePassword = function(value){
   let regex =    /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
   return regex.test(value)
  }
 
+ //================================VALIDATING EMPTY OBJECT=================================================//
+
 const validateRequest = function (value) {
   return Object.keys(value).length == 0
 };
 
+//====================================VALIDATING OBJECTID==================================================//
+
+
 let validateObjectId = function (ObjectId) {
   return mongoose.isValidObjectId(ObjectId)
 }
+
+//===============================VALIDATING PASSWORD LENGTH=================================================//
+
 
 const passwordLength = function (password) {
   if (password.length >= 8 && password.length <= 15) {
@@ -69,27 +65,39 @@ const passwordLength = function (password) {
   } else return false;
 };
 
+//====================================VALIDATING PHONE NUMBER==================================================//
+
 
 const regexPhoneNumber = function(val){
     let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
     return regx.test(val);
 }
+
+//====================================VALIDATING PINCODE==================================================//
+
+
 const isValidPincode =function(val){
     return   typeof val=="number"  && val.toString().length==6 
 }
+
+
+//====================================VALIDATING IMAGE EXTENSION==================================================//
+
 
 const imageExtValidator = function(val){
   let regex = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/
   return regex.test(val)
 }
 
-const validNumber = function(value) {
- let regex= /^[0-9]*$/
- return regex.test(value)
-};
+//====================================VALIDATING WHOLE NUMBER==================================================//
+
+
 function onlyWholeNumbers(str) {
   return /^[0-9]+$/.test(str);
 }
+
+//====================================VALIDATING DECIMAL NUMBERS==================================================//
+
 
 function decNumbers(str) {
   return /^[0-9.]+$/.test(str);
@@ -98,8 +106,6 @@ function decNumbers(str) {
 
 module.exports = {
   validateString,
-  convertToArray,
-  checkValue,
   validateEmail,
   validatePassword,
   validateRequest,
@@ -110,9 +116,6 @@ module.exports = {
   regxName,
   isValidPincode,
   imageExtValidator,
-  validNumber,
   onlyWholeNumbers,
   decNumbers
-
-  
 };
