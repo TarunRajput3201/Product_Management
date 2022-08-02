@@ -22,8 +22,8 @@ router.put("/users/:userId/cart",authentication,updateCart)
 router.get("/users/:userId/cart",authentication,getCart)
 router.delete("/users/:userId/cart",authentication,deleteCart)
 
-router.post("/users/:userId/orders",createOrder)
-router.put("/users/:userId/orders",updateOrder)
+router.post("/users/:userId/orders",authentication,createOrder)
+router.put("/users/:userId/orders",authentication,updateOrder)
 
 router.all("/**",function(req,res){
     return res.status(404).send({status:false,message:"No such api found"})

@@ -51,10 +51,12 @@ let updateOrder=async function(req,res){
     try{let userId = req.params.userId
         if(!validateObjectId(userId)){return res.status(400).send({status:false,message:"please provide valid userId"})}
         
+        let tokenUserId=req.user.userId
+        if(userId!==tokenUserId){return res.status(403).send({status:false,message:"authorization failed"})}
         let {status,orderId}=req.body
         
         if(!orderId){return res.status(400).send({status:false,message:"please provide orderId"})}
-        if(!validateObjectId(userId)){return res.status(400).send({status:false,message:"please provide valid orderId"})}
+        if(!validateObjectId(orderId)){return res.status(400).send({status:false,message:"please provide valid orderId"})}
         
         let user=await userModel.findOne({_id:userId})
         if(!user){return res.status(404).send({status:false,message:"user with this userId not found"})}

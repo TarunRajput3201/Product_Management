@@ -66,7 +66,7 @@ let createUser = async function (req, res) {
         if (!validateNumber(address.billing.pincode)) { return res.status(400).send({ status: false, message: "please provide a valid billing pincode" }) }
         if (address.billing.pincode.toString().length !== 6) { return res.status(400).send({ status: false, message: "Billing address:pincode must be 6 digits" }) }
 
-        const salt = await bcrypt.genSalt(13);
+        const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, salt);
         data.password = encryptedPassword
 

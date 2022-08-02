@@ -85,7 +85,7 @@ const isValidPincode =function(val){
 
 
 const imageExtValidator = function(val){
-  let regex = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/
+  let regex = /\.(gif|jpe?g|tiff?|png|webp|bmp|jpg|JPG)$/
   return regex.test(val)
 }
 
