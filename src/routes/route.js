@@ -1,8 +1,9 @@
-let express = require("express")
-let router = express.Router()
-let {createUser,userLogin,getUser, Updateprofile}=require("../controllers/userController")
-let {createProduct,getProduct,getProductById,updateProduct,deleteProductById}=require("../controllers/productController")
-let {createCart,updateCart,getCart,deleteCart}=require("../controllers/cartController")
+const express = require("express")
+const router = express.Router()
+const {createUser,userLogin,getUser, Updateprofile}=require("../controllers/userController")
+const {createProduct,getProduct,getProductById,updateProduct,deleteProductById}=require("../controllers/productController")
+const {createCart,updateCart,getCart,deleteCart}=require("../controllers/cartController")
+const {createOrder,updateOrder}=require("../controllers/orderController")
 const { authentication } = require("../middleware/auth")
 
 router.post("/register",createUser)
@@ -20,6 +21,9 @@ router.post("/users/:userId/cart",authentication,createCart)
 router.put("/users/:userId/cart",authentication,updateCart)
 router.get("/users/:userId/cart",authentication,getCart)
 router.delete("/users/:userId/cart",authentication,deleteCart)
+
+router.post("/users/:userId/orders",createOrder)
+router.put("/users/:userId/orders",updateOrder)
 
 router.all("/**",function(req,res){
     return res.status(404).send({status:false,message:"No such api found"})

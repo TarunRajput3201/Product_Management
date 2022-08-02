@@ -210,8 +210,8 @@ const updateProduct = async function (req, res) {
         if ("isFreeShipping" in data) {
             if (!validateString(isFreeShipping)) { return res.status(400).send({ status: false, message: "isFreeShipping can't be empty" }) }
             if (!(isFreeShipping == "false" || isFreeShipping == "true")) { return res.status(400).send({ status: false, message: "please provide isFreeShipping value in true or false" }) }
-            if (isFreeShipping == "false") { productDoc.isFreeShipping = false }
-            if (isFreeShipping == "true") { productDoc.isFreeShipping = true }
+            if (isFreeShipping == "false" ||isFreeShipping==false) { productDoc.isFreeShipping = false }
+            if (isFreeShipping == "true" || isFreeShipping==true) { productDoc.isFreeShipping = true }
         }
 
         if ("availableSizes" in data) {
