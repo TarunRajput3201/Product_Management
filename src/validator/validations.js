@@ -84,7 +84,7 @@ const isValidPincode = function (val) {
 //====================================VALIDATING 0 IN PINCODE==================================================//
 
 const startWithZero=function(val){
-  return (typeof val=="number"&&val.toString()[0] == "0")|| (typeof val=="string"&&val[0] == "0")
+  return (typeof val=="number" && (val.toString())[0] == "0")|| (typeof val=="string" && val[0] == "0")
 }
 
 //====================================VALIDATING IMAGE EXTENSION==================================================//

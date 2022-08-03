@@ -53,12 +53,11 @@ let createUser = async function (req, res) {
 
         if (!validateString(address.shipping.city)) { return res.status(400).send({ status: false, message: "please provide the city in shipping address" }) }
 
-        if (startWithZero(address.shipping.pincode)) { return res.status(400).send({ status: false, message: "Shipping address:pincode cannot be zero or start with zero" }) }
+        if (startWithZero(address.shipping.pincode)) { return res.status(400).send({ status: false, message: "Shipping address:pincode cannot start with zero" }) }
         if (!address.shipping.pincode) { return res.status(400).send({ status: false, message: "please provide the pincode in shipping address" }) }
         // if (!validateNumber(address.shipping.pincode)) { return res.status(400).send({ status: false, message: "please provide a valid shipping pincode" }) }
-        console.log(address.shipping.pincode.toString().length!=6)
-        console.log(address.shipping.pincode.length!=6)
-        if (!isValidPincode(address.shippping.pincode)) { return res.status(400).send({ status: false, message: "Shipping address:pincode must be 6 digits" }) }
+        
+        if (!isValidPincode(address.shipping.pincode)) { return res.status(400).send({ status: false, message: "Shipping address:pincode must be 6 digits" }) }
 
         if (!validateString(address.billing)) { return res.status(400).send({ status: false, message: "please provide the billing details in address" }) }
 
@@ -149,7 +148,7 @@ let getUser = async function (req, res) {
 
         if (!mongoose.isValidObjectId(userId)) { return res.status(400).send({ status: false, message: "please enter valid userId" }) }
         let tokenUserId=req.user.userId
-        if(tokenUserId!==userId){return res.status(403).send({status:false,message:"authentication failed"})}
+        if(tokenUserId!==userId){return res.status(403).send({status:false,message:"authorization failed"})}
 
         let getUserDoc = await userModel.findById(userId)
         if (!getUserDoc) { return res.status(404).send({ status: false, message: "No such user is available" }) }
