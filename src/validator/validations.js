@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const regxName = function (val) {
-    let regx = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
-    return regx.test(val);
+  let regx = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
+  return regx.test(val);
 }
 
 //=====================================VALIDATING TYPE NUMBER=============================================//
@@ -38,12 +38,12 @@ const validateEmail = function (value) {
 
 //====================================VALIDATING PASSWORD==================================================//
 
-const validatePassword = function(value){
-  let regex =    /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
+const validatePassword = function (value) {
+  let regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
   return regex.test(value)
- }
+}
 
- //================================VALIDATING EMPTY OBJECT=================================================//
+//================================VALIDATING EMPTY OBJECT=================================================//
 
 const validateRequest = function (value) {
   return Object.keys(value).length == 0
@@ -68,23 +68,29 @@ const passwordLength = function (password) {
 //====================================VALIDATING PHONE NUMBER==================================================//
 
 
-const regexPhoneNumber = function(val){
-    let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
-    return regx.test(val);
+const regexPhoneNumber = function (val) {
+  let regx = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
+  return regx.test(val);
 }
 
 //====================================VALIDATING PINCODE==================================================//
 
 
-const isValidPincode =function(val){
-    return   typeof val=="number"  && val.toString().length==6 
+const isValidPincode = function (val) {
+  return ((typeof val=="number" &&  val.toString().length == 6) || (typeof val=="string" &&val.length == 6))
 }
 
+
+//====================================VALIDATING 0 IN PINCODE==================================================//
+
+const startWithZero=function(val){
+  return (typeof val=="number"&&val.toString()[0] == "0")|| (typeof val=="string"&&val[0] == "0")
+}
 
 //====================================VALIDATING IMAGE EXTENSION==================================================//
 
 
-const imageExtValidator = function(val){
+const imageExtValidator = function (val) {
   let regex = /\.(gif|jpe?g|tiff?|png|webp|bmp|jpg|JPG)$/
   return regex.test(val)
 }
@@ -117,5 +123,6 @@ module.exports = {
   isValidPincode,
   imageExtValidator,
   onlyWholeNumbers,
-  decNumbers
+  decNumbers,
+  startWithZero
 };

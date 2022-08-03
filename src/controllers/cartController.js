@@ -1,10 +1,8 @@
 const cartModel = require("../models/cartModel")
 const productModel = require("../models/productModel")
 const userModel = require("../models/userModel")
-const { validateString,
-    validateRequest,
-    validateObjectId,
-} = require("../validator/validations")
+const { validateRequest,
+    validateObjectId,} = require("../validator/validations")
 
 //=====================================CREATING CART===========================================================//
 
@@ -51,7 +49,7 @@ let createCart = async function (req, res) {
                 "totalItems": 1
             }
             let cartCreated = await cartModel.create(obj)
-            
+
             res.status(201).send({ status: true, message: "cart created successfully", data: cartCreated })
         }
         else {
@@ -95,7 +93,7 @@ let createCart = async function (req, res) {
 
     }
     catch (err) {
-        console.log(err)
+        
         return res.status(500).send({ sttus: false, message: err.message })
     }
 
@@ -128,8 +126,11 @@ let updateCart = async function (req, res) {
         let cart = await cartModel.findOne({ userId: userId, _id: cartId }, { __v: 0, createdAt: 0, updatedAt: 0, _id: 0 }).lean()
         if (!cart) { return res.status(404).send({ status: false, message: "cart with this userId not found" }) }
 
+        if(cart.items.length==0){
+            return res.status(400).send({ status: false, message: "no items in this cart to be updated" })
+        }
 
-        if ("removeProduct" in bodyData) {
+        if (removeProduct) {
 
             if (removeProduct == 0) {
                 for (let i = 0; i < cart.items.length; i++) {
@@ -154,6 +155,18 @@ let updateCart = async function (req, res) {
             }
             else { return res.status(400).send({ status: false, message: "please provide only 0 or 1" }) }
         }
+        else{return res.status(400).send({ status: false, message: "please provide removeProduct" }) }
+
+
+         let price=0
+        for(let i=0;i<cart.items.length;i++){
+            let product = await productModel.findById(items[i].productId)
+            price= price+ product.price
+        }
+        cart.totalPrice=price
+
+        cart.totalItems=cart.items.length
+
 
         let updateCart = await cartModel.findOneAndUpdate({ userId: userId, _id: cartId }, { $set: cart }, { new: true })
         res.status(200).send({ status: true, data: updateCart })
