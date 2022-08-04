@@ -12,13 +12,15 @@ const createOrder = async function (req, res) {
         let tokenUserId = req.user.userId
         if (tokenUserId !== userId) { return res.status(403).send({ status: false, message: "authorization failed" }) }
 
-        let { cancellable, status } = req.body
+        let { cancellable, cartId } = req.body
 
         let user = await userModel.findOne({ _id: userId })
         if (!user) { return res.status(404).send({ status: false, message: "user with this userId not found" }) }
 
-        let cart = await cartModel.findOne({ userId: userId }, { _id: 0, _v: 0, createdAt: 0, updatedAt: 0 }).lean()
+        let cart = await cartModel.findOne({ userId: userId }, {  _v: 0, createdAt: 0, updatedAt: 0 }).lean()
         if (!cart) { return res.status(404).send({ status: false, message: "No found cart found for this user" }) }
+       
+        if(cartId!=cart._id){return res.status(404).send({ status: false, message: "cart doesnot belongs to this user" })}
 
         let count = 0
         for (i = 0; i < cart.items.length; i++) {
@@ -32,13 +34,15 @@ const createOrder = async function (req, res) {
             if (cancellable == "false" || cancellable == false) { cart.cancellable = false }
             if (cancellable == "true" || cancellable == false) { cart.cancellable = true }
         }
-
-        if ("status" in req.body) {
-            if (!validateString(status)) { return res.status(400).send({ status: false, message: "status can't be empty" }) }
-            if (!['pending', 'completed', 'cancled'].includes(status)) { return res.status(400).send({ status: false, message: "please provide status from [pending, completed, cancled] only" }) }
-            cart.status = status
-        }
+        
         let orderCreated = await orderModel.create(cart)
+        
+        cart.items=[]
+        cart.totalPrice=0
+        cart.totalItems=0
+        
+        let cartEmptied=await cartModel.findOneAndUpdate({userId:userId},{$set:cart})
+
         res.status(200).send({ status: true, message: "order created successfully", data: orderCreated })
 
     } catch (err) {
@@ -52,8 +56,8 @@ let updateOrder = async function (req, res) {
         let userId = req.params.userId
         if (!validateObjectId(userId)) { return res.status(400).send({ status: false, message: "please provide valid userId" }) }
 
-        let tokenUserId = req.user.userId
-        if (userId !== tokenUserId) { return res.status(403).send({ status: false, message: "authorization failed" }) }
+        // let tokenUserId = req.user.userId
+        // if (userId !== tokenUserId) { return res.status(403).send({ status: false, message: "authorization failed" }) }
         let { status, orderId } = req.body
 
         if (!orderId) { return res.status(400).send({ status: false, message: "please provide orderId" }) }
@@ -69,8 +73,8 @@ let updateOrder = async function (req, res) {
 
         if (order.status == "cancled") { return res.status(400).send({ status: false, message: "order was cancelled" }) }
 
-        if ("status" in req.body) {
-            if (!validateString(status)) { return res.status(400).send({ status: false, message: "status can't be empty" }) }
+        
+            if (!validateString(status)) { return res.status(400).send({ status: false, message: "please provide status" }) }
             if (!['pending', 'completed', 'cancled'].includes(status)) { return res.status(400).send({ status: false, message: "please provide status from [pending, completed, cancled] only" }) }
             if (status == "cancled") {
                 if (order.cancellable) {
@@ -82,7 +86,7 @@ let updateOrder = async function (req, res) {
             else {
                 order.status = status
             }
-        }
+       
 
         order.save()
         res.status(200).send({ status: true, data: order })
