@@ -123,19 +123,26 @@ let updateCart = async function (req, res) {
         let user = await userModel.findById(userId)
         if (!user) { return res.status(404).send({ status: false, message: "user with this userId not found" }) }
 
-        let cart = await cartModel.findOne({ userId: userId, _id: cartId }, { __v: 0, createdAt: 0, updatedAt: 0, _id: 0 }).lean()
+        let cart = await cartModel.findOne({ userId: userId}, { __v: 0, createdAt: 0, updatedAt: 0 }).lean()
         if (!cart) { return res.status(404).send({ status: false, message: "cart with this userId not found" }) }
+
+        if(cartId!=cart._id){return res.status(404).send({ status: false, message: "cart doesnot belongs to this user" })}
 
         if(cart.items.length==0){
             return res.status(400).send({ status: false, message: "no items in this cart to be updated" })
         }
+        let product = await productModel.findById(productId)
 
         if (removeProduct) {
 
             if (removeProduct == 0) {
                 for (let i = 0; i < cart.items.length; i++) {
                     if (cart.items[i].productId == productId) {
+                       
+                       cart.totalPrice=cart.totalPrice-(product.price*cart.items[i].quantity)
                         cart.items.splice(i, 1)
+
+                        
                     }
                 }
             }
@@ -143,9 +150,11 @@ let updateCart = async function (req, res) {
                 for (let i = 0; i < cart.items.length; i++) {
                     if (cart.items[i].productId == productId) {
                         if (cart.items[i].quantity == 1) {
+                            cart.totalPrice=cart.totalPrice-product.price
                             cart.items.splice(i, 1)
                         }
                         else {
+                            cart.totalPrice=cart.totalPrice-product.price
                             cart.items[i].quantity--
                         }
 
@@ -158,13 +167,6 @@ let updateCart = async function (req, res) {
         else{return res.status(400).send({ status: false, message: "please provide removeProduct" }) }
 
 
-         let price=0
-        for(let i=0;i<cart.items.length;i++){
-            let product = await productModel.findById(items[i].productId)
-            price= price+ product.price
-        }
-        cart.totalPrice=price
-
         cart.totalItems=cart.items.length
 
 
@@ -172,6 +174,7 @@ let updateCart = async function (req, res) {
         res.status(200).send({ status: true, data: updateCart })
     }
     catch (err) {
+        console.log(err)
         return res.status(500).send({ sttus: false, message: err.message })
     }
 }
@@ -193,7 +196,7 @@ let getCart = async function (req, res) {
         let user = await userModel.findById(userId)
         if (!user) { return res.status(404).send({ status: false, message: "user with this userId not found" }) }
 
-        let cart = await cartModel.findOne({ userId: userId })
+        let cart = await cartModel.findOne({ userId: userId }).populate('items.productId',{title:1,price:1,productImage:1})
         if (!cart) { return res.status(404).send({ status: false, message: "cart with this userId not found" }) }
 
 
@@ -203,7 +206,7 @@ let getCart = async function (req, res) {
 
     }
     catch (err) {
-        return res.status(500).send({ sttus: false, message: err.message })
+        return res.status(500).send({ status: false, message: err.message })
     }
 }
 

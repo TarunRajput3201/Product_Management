@@ -7,6 +7,7 @@ const { validateString,
     onlyWholeNumbers,
     decNumbers,
     validateNumber } = require("../validator/validations")
+const cartModel = require("../models/cartModel")
 
 
 //=====================================CREATING PRODUCT===========================================================//
@@ -219,6 +220,20 @@ const updateProduct = async function (req, res) {
         if ("price" in data) {
             if (!validateString(price)) { return res.status(400).send({ status: false, message: "price can't be empty" }) }
             if (!decNumbers(price)) { return res.status(400).send({ status: false, message: "please provide valid price" }) }
+            
+            let cart= await cartModel.find({productId:productId})
+            
+            if(cart.length>0){
+            for(let i=0;i<cart.length;i++){
+                for(let j=0;j<cart[i].items.length;j++){
+                    if(cart[i].items[j].productId==productId){
+                        cart[i].totalPrice=cart[i].totalPrice-(productDoc.price*cart[i].items[j].quantity)+(price*cart[i].items[j].quantity)
+                        cart[i].save()
+                    }
+                }
+            }
+        }
+            
             productDoc.price = price
         }
 
@@ -259,7 +274,8 @@ const updateProduct = async function (req, res) {
             productDoc.productImage = uploadedFileURL
         }
         else if ("productImage" in data) { return res.status(400).send({ status: false, msg: "Please select product Image" }) }
-
+         
+        
 
         productDoc.save()
         return res.status(200).send({ status: false, message: "success", data: productDoc })
@@ -278,7 +294,7 @@ let deleteProductById = async function (req, res) {
     try {
         let productId = req.params.productId
 
-        if (!validateObjectId(productId)) { return res.status(400).send({ status: false, message: "please enter a valid objectId" }) }
+        if (!validateObjectId(productId)) { return res.status(400).send({ status: false, message: "please enter a valid productId" }) }
 
         let deletedData = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date } })
         if (!deletedData) { return res.status(404).send({ status: false, message: "No product with this productId or deleted" }) }
